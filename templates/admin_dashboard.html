@@ -20,7 +20,7 @@
         <option value="month" {% if period=='month' %}selected{% endif %}>Month</option>
       </select>
     </form>
-    <div>Total collection (Paid) for period: ₹{{ total_collection }}</div>
+    <div>Total collection (Paid) for period: Rs.{{ total_collection }}</div>
   </div>
 
   <h3>All Appointments</h3>
@@ -72,7 +72,7 @@ $(function(){
         <h3>Appointment ${data.id}</h3>
         <p><strong>${data.username}</strong> | ${data.phone}</p>
         <p>${data.service} — ${data.date} | ${data.start_time} - ${data.end_time}</p>
-        <p>Price: ₹${data.price}</p>
+        <p>Price: Rs.${data.price}</p>
         <p>Status: ${data.status}</p>
         <a href="/download/appointment/${data.id}" class="btn">Download Appointment PDF</a>
       `;
