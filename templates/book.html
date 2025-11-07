@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="booking">
+  <h2>Book Appointment</h2>
+  <form id="booking-form" method="post" action="{{ url_for('confirm') }}">
+    <div class="form-row">
+      <label>Name</label>
+      <input type="text" name="username" required>
+    </div>
+    <div class="form-row">
+      <label>Phone</label>
+      <input type="tel" name="phone" required pattern="[0-9+ ]{7,20}">
+    </div>
+    <div class="form-row">
+      <label>Service</label>
+      <select name="service" id="service-select" required>
+        <option value="">-- Select --</option>
+        {% for s in services %}
+          <option value="{{ s }}">{{ s }} - Rs.{{ prices.get(s, '') }}</option>
+        {% endfor %}
+        <optgroup label="Special styles (Rs.{{ special_price }})">
+          {% for style in special_styles %}
+            <option value="style:{{ style }}">Style: {{ style }}</option>
+          {% endfor %}
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Date</label>
+      <input type="date" name="date" id="date-input" required>
+    </div>
+    <div class="form-row">
+      <label>Available Slots</label>
+      <select name="slot" id="slot-select" required>
+        <option value="">Select date & service first</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <button type="submit" class="confirm-btn">Confirm Booking</button>
+    </div>
+  </form>
+
+  <div id="flash-area"></div>
+
+</section>
+
+<script>
+$(function(){
+  // prefill style if provided in query
+  const urlParams = new URLSearchParams(window.location.search);
+  const style = urlParams.get('style');
+  if(style){
+    $('#service-select').val('style:' + style);
+  }
+});
+</script>
+{% endblock %}

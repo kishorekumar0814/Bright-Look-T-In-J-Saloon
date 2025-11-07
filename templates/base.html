@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bright Look T In J Saloon</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <!-- minimal CSS reset + our styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- include simple JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1 id="shop-name">Bright Look <span class="accent">T In J</span> Saloon</h1>
+      <p class="tagline">“Grooming minds, one haircut at a time.”</p>
+    </div>
+    <nav class="main-nav">
+      <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+      <a href="{{ url_for('book') }}" class="nav-link">Book Appointment</a>
+      <a href="{{ url_for('admin_login') }}" class="nav-link">Admin</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrapper">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div>Open: 9:00 AM - 6:30 PM | Breaks: 11:00-11:30, 1:00-2:00</div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

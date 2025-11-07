@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="admin-panel">
+  <h2>Admin Dashboard</h2>
+  <div class="admin-controls">
+    <a href="{{ url_for('admin_logout') }}" class="btn">Logout</a>
+    <form method="post" action="{{ url_for('admin_reset_credentials') }}" class="inline-form">
+      <input name="new_user" placeholder="new userid">
+      <input name="new_pass" placeholder="new pass" type="password">
+      <button type="submit">Reset Creds (session)</button>
+    </form>
+  </div>
+
+  <div class="stats">
+    <form method="get" action="{{ url_for('admin_dashboard') }}">
+      <label>Period:</label>
+      <select name="period" onchange="this.form.submit()">
+        <option value="day" {% if period=='day' %}selected{% endif %}>Day</option>
+        <option value="week" {% if period=='week' %}selected{% endif %}>Week</option>
+        <option value="month" {% if period=='month' %}selected{% endif %}>Month</option>
+      </select>
+    </form>
+    <div>Total collection (Paid) for period: ₹{{ total_collection }}</div>
+  </div>
+
+  <h3>All Appointments</h3>
+  <table class="appt-table">
+    <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for a in appts %}
+      <tr>
+        <td>{{ a.id }}</td>
+        <td>{{ a.username }}</td>
+        <td>{{ a.phone }}</td>
+        <td>{{ a.service }}</td>
+        <td>{{ a.date.strftime('%Y-%m-%d') }}</td>
+        <td>{{ a.start_time.strftime('%H:%M') }} - {{ a.end_time.strftime('%H:%M') }}</td>
+        <td>₹{{ a.price }}</td>
+        <td>{{ a.status }}</td>
+        <td>
+          <button class="btn view-appt" data-id="{{ a.id }}">View</button>
+          <form method="post" action="{{ url_for('admin_approve', ap_id=a.id) }}" style="display:inline;">
+            <button class="btn" type="submit">Approve</button>
+          </form>
+          <form method="post" action="{{ url_for('admin_reject', ap_id=a.id) }}" style="display:inline;">
+            <button class="btn" type="submit">Reject</button>
+          </form>
+          <form method="post" action="{{ url_for('admin_mark_paid', ap_id=a.id) }}" style="display:inline;">
+            <button class="btn" type="submit">Mark Paid & Receipt</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<!-- modal for appointment details -->
+<div id="appt-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+$(function(){
+  $('.view-appt').on('click', function(){
+    const id = $(this).data('id');
+    $.getJSON('/appointment/' + id, function(data){
+      const html = `
+        <h3>Appointment ${data.id}</h3>
+        <p><strong>${data.username}</strong> | ${data.phone}</p>
+        <p>${data.service} — ${data.date} | ${data.start_time} - ${data.end_time}</p>
+        <p>Price: ₹${data.price}</p>
+        <p>Status: ${data.status}</p>
+        <a href="/download/appointment/${data.id}" class="btn">Download Appointment PDF</a>
+      `;
+      $('#modal-body').html(html);
+      $('#appt-modal').show();
+    });
+  });
+  $('.close').on('click', function(){ $('#appt-modal').hide(); });
+});
+</script>
+{% endblock %}
