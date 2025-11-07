@@ -62,7 +62,7 @@ PRICES = {
     'Hair cutting + Trimming': 150,
     # 6 special styles use 200
 }
-SPECIAL_STYLES = ['pompadour', 'Fade haircut styles', 'Classic side part', 'Drop fade', 'High fade', 'Undercut']
+SPECIAL_STYLES = ['Pompadour', 'Fade haircut styles', 'Classic side part', 'Drop fade', 'High fade', 'Undercut']
 SPECIAL_PRICE = 200
 
 # buffer between appointments in minutes
